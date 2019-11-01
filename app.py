@@ -33,12 +33,17 @@ def main():
                 move_to_documents(file)
             if fnmatch_any(file, "Screen Shot*.png"):
                 move_to_screen_shots(file)
+            if fnmatch_any(file, "*.png", "*.jpg"):
+                move_to_pictures(file)
 
 def fnmatch_any(file, *args):
     for arg in args:
         if fnmatch.fnmatch(file, arg):
             return True
     return False
+
+def move_to_pictures(file: str):
+    move_to_folder(PICTURE, file)
 
 def move_to_screen_shots(file: str):
     move_to_folder(SCREENSHOT, file)
