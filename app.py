@@ -1,5 +1,6 @@
 import os
 import fnmatch
+import PySimpleGUI as sg
 
 
 PATH = f"{os.environ['HOME']}/Desktop"
@@ -9,32 +10,74 @@ PATH = f"{os.environ['HOME']}/Desktop"
 # PICTURES_FOLDER = f"{PATH}/Pictures"
 
 DOCUMENT = {
-    "name": f"{PATH}/Documents",
+    "name": "Documents",
+    "path": f"{PATH}/Documents",
     "description": "document",
+    "rules": ["*.docx", "*.pdf", "*.txt"],
 }
 
 SCREENSHOT = {
-    "name": f"{PATH}/Screenshots",
+    "name": "Screenshots",
+    "path": f"{PATH}/Screenshots",
     "description": "screen shot",
+    "rules": ["Screen Shot*.png"],
 }
 
 PICTURE = {
-    "name": f"{PATH}/Pictures",
+    "name": "Pictures",
+    "path": f"{PATH}/Pictures",
     "description": "picture",
+    "rules": ["*.png", "*.jpg"],
 }
 
 def main():
-    # Have everything in main first for the tutorial
+    button, values = gui()
+    if button == "Cancel":
+        return
+
+    adjust_options(values)
+    organize_desktop()
+
+def organize_desktop():
     for file in os.listdir(PATH):
         if os.path.isfile(f"{PATH}/{file}"):
             print(f"Desktop has {file}")
-            # if fnmatch.fnmatch(file, '*.docx') or fnmatch.fnmatch(file, '*.pdf') or fnmatch.fnmatch(file, '*.txt'):
-            if fnmatch_any(file, "*.docx", "*.pdf", "*.txt"):
-                move_to_documents(file)
-            if fnmatch_any(file, "Screen Shot*.png"):
-                move_to_screen_shots(file)
-            if fnmatch_any(file, "*.png", "*.jpg"):
-                move_to_pictures(file)
+            for file_type in [DOCUMENT, SCREENSHOT, PICTURE]:
+                if fnmatch_any(file, *file_type['rules']):
+                    move_to_folder(file_type, file)
+                    break
+
+def gui():
+    layout = [      
+        [sg.Text("Organize your desktop by moving files to proper folders", font=('Helvetica', 20), justification='center')], 
+        get_folder_gui(DOCUMENT),
+        get_folder_gui(SCREENSHOT),
+        get_folder_gui(PICTURE),
+        [sg.Submit(font=('Helvetica', 20)), sg.Cancel(font=('Helvetica', 20))]
+    ]
+
+    window = sg.Window('Desktorganizer').Layout(layout)
+    button, values = window.Read()
+    return button, values
+
+def adjust_options(values):
+    if values['Browse']:
+        DOCUMENT['path'] = values['Browse']
+    if values['Browse0']:
+        SCREENSHOT['path'] = values['Browse0']
+    if values['Browse1']:
+        PICTURE['path'] = values['Browse1']
+
+def get_folder_gui(folder):
+    return [
+        sg.Text(f"{folder['name']} Folder", 
+            size=(20, 1), 
+            font=('Helvetica', 20), 
+            auto_size_text=False, 
+            justification='left'), 
+        sg.InputText(f"{folder['path']}", font=('Helvetica', 20)), 
+        sg.FolderBrowse(font=('Helvetica', 20)),
+    ]
 
 def fnmatch_any(file, *args):
     for arg in args:
@@ -42,19 +85,10 @@ def fnmatch_any(file, *args):
             return True
     return False
 
-def move_to_pictures(file: str):
-    move_to_folder(PICTURE, file)
-
-def move_to_screen_shots(file: str):
-    move_to_folder(SCREENSHOT, file)
-
-def move_to_documents(file: str):
-    move_to_folder(DOCUMENT, file)
-
 def move_to_folder(folder, file: str):
     print(f"{file} is a {folder['description']}!")
-    is_directory(folder['name'])
-    move(file, folder['name'])
+    is_directory(folder['path'])
+    move(file, folder['path'])
 
 def move(file: str, folder: str):
     current_path = f"{PATH}/{file}"
