@@ -28,3 +28,5 @@ When everything is tested you can produce a build for deployment with a calling 
 `$ rm -rf build dist`
 `$ python setup.py py2app`
 This will assemble your application as `dist/Desktop.app`. Since this application is self-contained, you will have to run the py2app command again any time you change any source code, data files, options, etc.
+
+More info: [https://www.metachris.com/2015/11/create-standalone-mac-os-x-applications-with-python-and-py2app/](https://www.metachris.com/2015/11/create-standalone-mac-os-x-applications-with-python-and-py2app/)
