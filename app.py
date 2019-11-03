@@ -70,12 +70,12 @@ def adjust_options(values):
 
 def get_folder_gui(folder):
     return [
-        sg.Text(f"{folder['name']} Folder", 
-            size=(20, 1), 
-            font=('Helvetica', 20), 
-            auto_size_text=False, 
-            justification='left'), 
-        sg.InputText(f"{folder['path']}", font=('Helvetica', 20)), 
+        sg.Text(f"{folder['name']} Folder",
+            size=(20, 1),
+            font=('Helvetica', 20),
+            auto_size_text=False,
+            justification='left'),
+        sg.InputText(f"{folder['path']}", font=('Helvetica', 20)),
         sg.FolderBrowse(font=('Helvetica', 20)),
     ]
 
