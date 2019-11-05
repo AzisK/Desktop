@@ -5,7 +5,7 @@ Python application to organize Desktop
 To build the app make sure to have newest Python and py2app library
 It did not work for me until I updated the libraries
 - I installed the newest Python version via brew `python 3.7.5`
-- pip install -U py2app gave me this version `py2app==0.19`
+- `pip install -U py2app` gave me this version `py2app==0.19`
 
 ### Build the app for development and testing
 py2app builds the standalone application based on the definition in `setup.py`.
